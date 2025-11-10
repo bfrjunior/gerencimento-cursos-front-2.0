@@ -44,7 +44,7 @@ const mockCursos = [
 describe('MatriculasPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockApi.get.mockImplementation((url) => {
+    mockApi.get.mockImplementation((url:string) => {
       if (url === '/alunos') return Promise.resolve({ data: mockAlunos })
       if (url === '/cursos') return Promise.resolve({ data: mockCursos })
       if (url.includes('/relatorios/alunos-por-curso/')) {

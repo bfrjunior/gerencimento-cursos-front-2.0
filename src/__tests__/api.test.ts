@@ -25,4 +25,4 @@ describe('API Service', () => {
     expect(api.put).toBeDefined()
     expect(api.delete).toBeDefined()
   })
-}
+})
