@@ -102,7 +102,6 @@ describe('MatriculasPage', () => {
   })
 
   it('deve mostrar erro quando matrícula já existe', async () => {
-    const user = userEvent.setup()
     mockApi.post.mockRejectedValue({
       response: { status: 409, data: 'Aluno já matriculado neste curso' }
     })

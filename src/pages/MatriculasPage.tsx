@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, FileText, Users, BookOpen, Calendar } from 'lucide-react';
+import { Plus, FileText, Users, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { api, Matricula, Aluno, Curso } from '@/services/api';
 
 export function MatriculasPage() {
-  const [matriculas, setMatriculas] = useState<Matricula[]>([]);
+  const [, setMatriculas] = useState<Matricula[]>([]);
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loading, setLoading] = useState(true);
@@ -117,15 +117,7 @@ export function MatriculasPage() {
     }
   };
 
-  const getAlunoNome = (alunoId: number) => {
-    const aluno = alunos.find(a => a.id === alunoId);
-    return aluno?.nome || 'Aluno não encontrado';
-  };
 
-  const getCursoNome = (cursoId: number) => {
-    const curso = cursos.find(c => c.id === cursoId);
-    return curso?.nome || 'Curso não encontrado';
-  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR');
