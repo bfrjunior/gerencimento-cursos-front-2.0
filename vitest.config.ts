@@ -12,10 +12,9 @@ export default defineConfig({
     poolOptions: {
       threads: {
         singleThread: true,
+        isolate: false,
       },
     },
-    testTimeout: 10000,
-    hookTimeout: 10000,
   },
   resolve: {
     alias: {
