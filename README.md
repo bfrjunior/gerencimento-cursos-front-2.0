@@ -75,8 +75,9 @@
 ### **Pré-requisitos**
 - Node.js 18+ 
 - pnpm (recomendado) ou npm
+- Docker (opcional, para containerização)
 
-### **Instalação**
+### **Instalação Local**
 ```bash
 # Clone o repositório
 git clone <repository-url>
@@ -100,6 +101,30 @@ pnpm test:run     # Executar testes uma vez
 pnpm test:ui      # Interface visual dos testes
 pnpm test:coverage # Relatório de cobertura
 ```
+
+### **🐳 Deploy com Docker**
+
+#### **Build e Execução**
+```bash
+# Build da imagem Docker
+docker build -t gerenciamento-cursos-front .
+
+# Executar container
+docker run -p 3000:80 gerenciamento-cursos-front
+```
+
+#### **Docker Compose**
+```bash
+# Build e execução com docker-compose
+docker-compose up --build
+
+# Executar em background
+docker-compose up -d --build
+```
+
+#### **Acesso**
+- **Desenvolvimento**: http://localhost:5173
+- **Produção (Docker)**: http://localhost:3000
 
 ---
 
@@ -236,13 +261,15 @@ xl: 1280px  /* Desktop grande */
 - **Tree Shaking** - Remoção de código não usado
 - **Lazy Loading** - Componentes carregados quando necessário
 - **Bundle Optimization** - Vite com otimizações automáticas
-- **Caching** - Estratégias de cache inteligentes
+- **Nginx Caching** - Cache de assets estáticos (1 ano)
+- **Docker Multi-stage** - Imagem otimizada para produção
 
 ### **📊 Métricas**
 - **First Contentful Paint** < 1.5s
 - **Largest Contentful Paint** < 2.5s
 - **Cumulative Layout Shift** < 0.1
 - **Bundle Size** < 500KB gzipped
+- **Docker Image** < 50MB (Alpine + Nginx)
 
 ---
 
@@ -270,14 +297,23 @@ UI Component → API Service → Backend → Database
 
 ---
 
-## 🤝 Contribuição
+## 🐳 Docker
 
-### **📝 Como Contribuir**
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+### **📁 Arquivos Docker**
+- `Dockerfile` - Multi-stage build com Node.js + Nginx
+- `docker-compose.yml` - Orquestração simplificada
+- `nginx.conf` - Configuração otimizada para SPA
+- `.dockerignore` - Exclusão de arquivos desnecessários
+
+### **🔧 Configuração Nginx**
+- **SPA Routing** - Fallback para index.html
+- **Cache Headers** - Assets com cache de 1 ano
+- **MIME Types** - Suporte completo a tipos de arquivo
+- **Compressão** - Otimização automática
+
+---
+
+
 
 ### **📋 Padrões de Código**
 - **ESLint** - Linting automático
