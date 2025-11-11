@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/14</span>
+                <span class='fraction'>6/12</span>
             </div>
         
             
@@ -292,8 +292,8 @@
 <a name='L227'></a><a href='#L227'>227</a>
 <a name='L228'></a><a href='#L228'>228</a>
 <a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a>
-<a name='L231'></a><a href='#L231'>231</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L230'></a><a href='#L230'>230</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -426,7 +426,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -437,7 +436,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -531,6 +529,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { api, Curso } from '@/services/api';
@@ -641,48 +640,46 @@ export function CursosPage() {
         &lt;/Button&gt;
       &lt;/div&gt;
 &nbsp;
-      {showForm &amp;&amp; (
-        &lt;Card&gt;
-          &lt;CardHeader&gt;
-            &lt;CardTitle&gt;{editingCurso ? <span class="branch-0 cbranch-no" title="branch not covered" >'Editar Curso' : '</span>Novo Curso'}&lt;/CardTitle&gt;
-            &lt;CardDescription&gt;
+      &lt;Dialog open={showForm} onOpenChange={setShowForm}&gt;
+        &lt;DialogContent&gt;
+          &lt;DialogHeader&gt;
+            &lt;DialogTitle&gt;{editingCurso ? <span class="branch-0 cbranch-no" title="branch not covered" >'Editar Curso' : '</span>Novo Curso'}&lt;/DialogTitle&gt;
+            &lt;DialogDescription&gt;
               {editingCurso ? <span class="branch-0 cbranch-no" title="branch not covered" >'Atualize as informações do curso' : '</span>Preencha os dados do novo curso'}
-            &lt;/CardDescription&gt;
-          &lt;/CardHeader&gt;
-          &lt;CardContent&gt;
-            &lt;form onSubmit={handleSubmit} className="space-y-4"&gt;
-              &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-4"&gt;
-                &lt;div&gt;
-                  &lt;Label htmlFor="nome"&gt;Nome do Curso&lt;/Label&gt;
-                  &lt;Input
-                    id="nome"
-                    value={formData.nome}
-                    onChange={(e) =&gt; setFormData({ ...formData, nome: e.target.value })}
-                    required
-                  /&gt;
-                &lt;/div&gt;
-                &lt;div&gt;
-                  &lt;Label htmlFor="descricao"&gt;Descrição&lt;/Label&gt;
-                  &lt;Input
-                    id="descricao"
-                    value={formData.descricao}
-                    onChange={(e) =&gt; setFormData({ ...formData, descricao: e.target.value })}
-                    required
-                  /&gt;
-                &lt;/div&gt;
+            &lt;/DialogDescription&gt;
+          &lt;/DialogHeader&gt;
+          &lt;form onSubmit={handleSubmit} className="space-y-4"&gt;
+            &lt;div className="grid grid-cols-1 gap-4"&gt;
+              &lt;div&gt;
+                &lt;Label htmlFor="nome"&gt;Nome do Curso&lt;/Label&gt;
+                &lt;Input
+                  id="nome"
+                  value={formData.nome}
+                  onChange={(e) =&gt; setFormData({ ...formData, nome: e.target.value })}
+                  required
+                /&gt;
               &lt;/div&gt;
-              &lt;div className="flex gap-2"&gt;
-                &lt;Button type="submit"&gt;
-                  {editingCurso ? <span class="branch-0 cbranch-no" title="branch not covered" >'Atualizar' : '</span>Criar'} Curso
-                &lt;/Button&gt;
-                &lt;Button type="button" variant="outline" onClick={resetForm}&gt;
-                  Cancelar
-                &lt;/Button&gt;
+              &lt;div&gt;
+                &lt;Label htmlFor="descricao"&gt;Descrição&lt;/Label&gt;
+                &lt;Input
+                  id="descricao"
+                  value={formData.descricao}
+                  onChange={(e) =&gt; setFormData({ ...formData, descricao: e.target.value })}
+                  required
+                /&gt;
               &lt;/div&gt;
-            &lt;/form&gt;
-          &lt;/CardContent&gt;
-        &lt;/Card&gt;
-      )}
+            &lt;/div&gt;
+            &lt;div className="flex gap-2"&gt;
+              &lt;Button type="submit"&gt;
+                {editingCurso ? <span class="branch-0 cbranch-no" title="branch not covered" >'Atualizar' : '</span>Criar'} Curso
+              &lt;/Button&gt;
+              &lt;Button type="button" variant="outline" onClick={resetForm}&gt;
+                Cancelar
+              &lt;/Button&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+        &lt;/DialogContent&gt;
+      &lt;/Dialog&gt;
 &nbsp;
       &lt;Card&gt;
         &lt;CardHeader&gt;
@@ -760,7 +757,7 @@ export function CursosPage() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-11T12:21:20.509Z
+                at 2025-11-11T18:16:09.760Z
             </div>
         <script src="../prettify.js"></script>
         <script>

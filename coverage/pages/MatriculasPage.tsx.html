@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">36.36% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/24</span>
+                <span class='fraction'>8/22</span>
             </div>
         
             
@@ -391,8 +391,8 @@
 <a name='L326'></a><a href='#L326'>326</a>
 <a name='L327'></a><a href='#L327'>327</a>
 <a name='L328'></a><a href='#L328'>328</a>
-<a name='L329'></a><a href='#L329'>329</a>
-<a name='L330'></a><a href='#L330'>330</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L329'></a><a href='#L329'>329</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -584,6 +584,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -597,32 +620,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -728,6 +726,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { api, Matricula, Aluno, Curso } from '@/services/api';
@@ -899,76 +898,74 @@ export function MatriculasPage() {
         ))}
       &lt;/div&gt;
 &nbsp;
-      {showForm &amp;&amp; (
-        &lt;Card&gt;
-          &lt;CardHeader&gt;
-            &lt;CardTitle&gt;Nova Matrícula&lt;/CardTitle&gt;
-            &lt;CardDescription&gt;
+      &lt;Dialog open={showForm} onOpenChange={setShowForm}&gt;
+        &lt;DialogContent&gt;
+          &lt;DialogHeader&gt;
+            &lt;DialogTitle&gt;Nova Matrícula&lt;/DialogTitle&gt;
+            &lt;DialogDescription&gt;
               Selecione o aluno e o curso para realizar a matrícula
-            &lt;/CardDescription&gt;
-          &lt;/CardHeader&gt;
-          &lt;CardContent&gt;
-            &lt;form onSubmit={handleSubmit} className="space-y-4"&gt;
-              &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-4"&gt;
-                &lt;div&gt;
-                  &lt;Label&gt;Aluno&lt;/Label&gt;
-                  &lt;Select
-                    value={formData.alunoId}
-                    onValueChange={<span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >setFormData({ ...formData, alunoId: value })}</span>
-                  &gt;
-                    &lt;SelectTrigger&gt;
-                      &lt;SelectValue placeholder="Selecione um aluno" /&gt;
-                    &lt;/SelectTrigger&gt;
-                    &lt;SelectContent&gt;
-                      {alunos.length === 0 ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                        &lt;SelectItem value="no-alunos" disabled&gt;</span>
-                          Nenhum aluno cadastrado
+            &lt;/DialogDescription&gt;
+          &lt;/DialogHeader&gt;
+          &lt;form onSubmit={handleSubmit} className="space-y-4"&gt;
+            &lt;div className="grid grid-cols-1 gap-4"&gt;
+              &lt;div&gt;
+                &lt;Label&gt;Aluno&lt;/Label&gt;
+                &lt;Select
+                  value={formData.alunoId}
+                  onValueChange={<span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >setFormData({ ...formData, alunoId: value })}</span>
+                &gt;
+                  &lt;SelectTrigger&gt;
+                    &lt;SelectValue placeholder="Selecione um aluno" /&gt;
+                  &lt;/SelectTrigger&gt;
+                  &lt;SelectContent&gt;
+                    {alunos.length === 0 ? (
+                      &lt;SelectItem value="no-alunos" disabled&gt;
+                        Nenhum aluno cadastrado
+                      &lt;/SelectItem&gt;
+                    ) : (
+                      alunos.map((aluno) =&gt; (
+                        &lt;SelectItem key={aluno.id} value={aluno.id.toString()}&gt;
+                          {aluno.nome} - {aluno.email}
                         &lt;/SelectItem&gt;
-                      ) : (
-                        alunos.map((aluno) =&gt; (
-                          &lt;SelectItem key={aluno.id} value={aluno.id.toString()}&gt;
-                            {aluno.nome} - {aluno.email}
-                          &lt;/SelectItem&gt;
-                        ))
-                      )}
-                    &lt;/SelectContent&gt;
-                  &lt;/Select&gt;
-                &lt;/div&gt;
-                &lt;div&gt;
-                  &lt;Label&gt;Curso&lt;/Label&gt;
-                  &lt;Select
-                    value={formData.cursoId}
-                    onValueChange={<span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >setFormData({ ...formData, cursoId: value })}</span>
-                  &gt;
-                    &lt;SelectTrigger&gt;
-                      &lt;SelectValue placeholder="Selecione um curso" /&gt;
-                    &lt;/SelectTrigger&gt;
-                    &lt;SelectContent&gt;
-                      {cursos.length === 0 ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                        &lt;SelectItem value="no-cursos" disabled&gt;</span>
-                          Nenhum curso cadastrado
+                      ))
+                    )}
+                  &lt;/SelectContent&gt;
+                &lt;/Select&gt;
+              &lt;/div&gt;
+              &lt;div&gt;
+                &lt;Label&gt;Curso&lt;/Label&gt;
+                &lt;Select
+                  value={formData.cursoId}
+                  onValueChange={<span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >setFormData({ ...formData, cursoId: value })}</span>
+                &gt;
+                  &lt;SelectTrigger&gt;
+                    &lt;SelectValue placeholder="Selecione um curso" /&gt;
+                  &lt;/SelectTrigger&gt;
+                  &lt;SelectContent&gt;
+                    {cursos.length === 0 ? (
+                      &lt;SelectItem value="no-cursos" disabled&gt;
+                        Nenhum curso cadastrado
+                      &lt;/SelectItem&gt;
+                    ) : (
+                      cursos.map((curso) =&gt; (
+                        &lt;SelectItem key={curso.id} value={curso.id.toString()}&gt;
+                          {curso.nome}
                         &lt;/SelectItem&gt;
-                      ) : (
-                        cursos.map((curso) =&gt; (
-                          &lt;SelectItem key={curso.id} value={curso.id.toString()}&gt;
-                            {curso.nome}
-                          &lt;/SelectItem&gt;
-                        ))
-                      )}
-                    &lt;/SelectContent&gt;
-                  &lt;/Select&gt;
-                &lt;/div&gt;
+                      ))
+                    )}
+                  &lt;/SelectContent&gt;
+                &lt;/Select&gt;
               &lt;/div&gt;
-              &lt;div className="flex gap-2"&gt;
-                &lt;Button type="submit"&gt;Realizar Matrícula&lt;/Button&gt;
-                &lt;Button type="button" variant="outline" onClick={resetForm}&gt;
-                  Cancelar
-                &lt;/Button&gt;
-              &lt;/div&gt;
-            &lt;/form&gt;
-          &lt;/CardContent&gt;
-        &lt;/Card&gt;
-      )}
+            &lt;/div&gt;
+            &lt;div className="flex gap-2"&gt;
+              &lt;Button type="submit"&gt;Realizar Matrícula&lt;/Button&gt;
+              &lt;Button type="button" variant="outline" onClick={resetForm}&gt;
+                Cancelar
+              &lt;/Button&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+        &lt;/DialogContent&gt;
+      &lt;/Dialog&gt;
 &nbsp;
       &lt;Card&gt;
         &lt;CardHeader&gt;
@@ -1057,7 +1054,7 @@ export function MatriculasPage() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-11T12:21:20.509Z
+                at 2025-11-11T18:16:09.760Z
             </div>
         <script src="../prettify.js"></script>
         <script>

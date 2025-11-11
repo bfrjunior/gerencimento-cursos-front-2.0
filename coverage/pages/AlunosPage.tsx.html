@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/18</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
@@ -334,8 +334,8 @@
 <a name='L269'></a><a href='#L269'>269</a>
 <a name='L270'></a><a href='#L270'>270</a>
 <a name='L271'></a><a href='#L271'>271</a>
-<a name='L272'></a><a href='#L272'>272</a>
-<a name='L273'></a><a href='#L273'>273</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L272'></a><a href='#L272'>272</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -485,7 +485,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -507,7 +506,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -615,6 +613,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { api, Aluno } from '@/services/api';
@@ -742,60 +741,58 @@ export function AlunosPage() {
         &lt;/Button&gt;
       &lt;/div&gt;
 &nbsp;
-      {showForm &amp;&amp; (
-        &lt;Card&gt;
-          &lt;CardHeader&gt;
-            &lt;CardTitle&gt;{editingAluno ? <span class="branch-0 cbranch-no" title="branch not covered" >'Editar Aluno' : '</span>Novo Aluno'}&lt;/CardTitle&gt;
-            &lt;CardDescription&gt;
+      &lt;Dialog open={showForm} onOpenChange={setShowForm}&gt;
+        &lt;DialogContent&gt;
+          &lt;DialogHeader&gt;
+            &lt;DialogTitle&gt;{editingAluno ? <span class="branch-0 cbranch-no" title="branch not covered" >'Editar Aluno' : '</span>Novo Aluno'}&lt;/DialogTitle&gt;
+            &lt;DialogDescription&gt;
               {editingAluno ? <span class="branch-0 cbranch-no" title="branch not covered" >'Atualize as informações do aluno' : '</span>Preencha os dados do novo aluno'}
-            &lt;/CardDescription&gt;
-          &lt;/CardHeader&gt;
-          &lt;CardContent&gt;
-            &lt;form onSubmit={handleSubmit} className="space-y-4"&gt;
-              &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-4"&gt;
-                &lt;div&gt;
-                  &lt;Label htmlFor="nome"&gt;Nome Completo&lt;/Label&gt;
-                  &lt;Input
-                    id="nome"
-                    value={formData.nome}
-                    onChange={(e) =&gt; setFormData({ ...formData, nome: e.target.value })}
-                    required
-                  /&gt;
-                &lt;/div&gt;
-                &lt;div&gt;
-                  &lt;Label htmlFor="email"&gt;Email&lt;/Label&gt;
-                  &lt;Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =&gt; setFormData({ ...formData, email: e.target.value })}
-                    required
-                  /&gt;
-                &lt;/div&gt;
-                &lt;div&gt;
-                  &lt;Label htmlFor="dataNascimento"&gt;Data de Nascimento&lt;/Label&gt;
-                  &lt;Input
-                    id="dataNascimento"
-                    type="date"
-                    value={formData.dataNascimento}
-                    onChange={(e) =&gt; setFormData({ ...formData, dataNascimento: e.target.value })}
-                    max={new Date().toISOString().split('T')[0]}
-                    required
-                  /&gt;
-                &lt;/div&gt;
+            &lt;/DialogDescription&gt;
+          &lt;/DialogHeader&gt;
+          &lt;form onSubmit={handleSubmit} className="space-y-4"&gt;
+            &lt;div className="grid grid-cols-1 gap-4"&gt;
+              &lt;div&gt;
+                &lt;Label htmlFor="nome"&gt;Nome Completo&lt;/Label&gt;
+                &lt;Input
+                  id="nome"
+                  value={formData.nome}
+                  onChange={(e) =&gt; setFormData({ ...formData, nome: e.target.value })}
+                  required
+                /&gt;
               &lt;/div&gt;
-              &lt;div className="flex gap-2"&gt;
-                &lt;Button type="submit"&gt;
-                  {editingAluno ? <span class="branch-0 cbranch-no" title="branch not covered" >'Atualizar' : '</span>Cadastrar'} Aluno
-                &lt;/Button&gt;
-                &lt;Button type="button" variant="outline" onClick={resetForm}&gt;
-                  Cancelar
-                &lt;/Button&gt;
+              &lt;div&gt;
+                &lt;Label htmlFor="email"&gt;Email&lt;/Label&gt;
+                &lt;Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =&gt; setFormData({ ...formData, email: e.target.value })}
+                  required
+                /&gt;
               &lt;/div&gt;
-            &lt;/form&gt;
-          &lt;/CardContent&gt;
-        &lt;/Card&gt;
-      )}
+              &lt;div&gt;
+                &lt;Label htmlFor="dataNascimento"&gt;Data de Nascimento&lt;/Label&gt;
+                &lt;Input
+                  id="dataNascimento"
+                  type="date"
+                  value={formData.dataNascimento}
+                  onChange={(e) =&gt; setFormData({ ...formData, dataNascimento: e.target.value })}
+                  max={new Date().toISOString().split('T')[0]}
+                  required
+                /&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div className="flex gap-2"&gt;
+              &lt;Button type="submit"&gt;
+                {editingAluno ? <span class="branch-0 cbranch-no" title="branch not covered" >'Atualizar' : '</span>Cadastrar'} Aluno
+              &lt;/Button&gt;
+              &lt;Button type="button" variant="outline" onClick={resetForm}&gt;
+                Cancelar
+              &lt;/Button&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+        &lt;/DialogContent&gt;
+      &lt;/Dialog&gt;
 &nbsp;
       &lt;Card&gt;
         &lt;CardHeader&gt;
@@ -886,7 +883,7 @@ export function AlunosPage() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-11T12:21:20.509Z
+                at 2025-11-11T18:16:09.760Z
             </div>
         <script src="../prettify.js"></script>
         <script>

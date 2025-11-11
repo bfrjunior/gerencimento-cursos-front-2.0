@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { api, Matricula, Aluno, Curso } from '@/services/api';
@@ -176,76 +177,74 @@ export function MatriculasPage() {
         ))}
       </div>
 
-      {showForm && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Nova Matrícula</CardTitle>
-            <CardDescription>
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nova Matrícula</DialogTitle>
+            <DialogDescription>
               Selecione o aluno e o curso para realizar a matrícula
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>Aluno</Label>
-                  <Select
-                    value={formData.alunoId}
-                    onValueChange={(value) => setFormData({ ...formData, alunoId: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um aluno" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {alunos.length === 0 ? (
-                        <SelectItem value="no-alunos" disabled>
-                          Nenhum aluno cadastrado
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <Label>Aluno</Label>
+                <Select
+                  value={formData.alunoId}
+                  onValueChange={(value) => setFormData({ ...formData, alunoId: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um aluno" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {alunos.length === 0 ? (
+                      <SelectItem value="no-alunos" disabled>
+                        Nenhum aluno cadastrado
+                      </SelectItem>
+                    ) : (
+                      alunos.map((aluno) => (
+                        <SelectItem key={aluno.id} value={aluno.id.toString()}>
+                          {aluno.nome} - {aluno.email}
                         </SelectItem>
-                      ) : (
-                        alunos.map((aluno) => (
-                          <SelectItem key={aluno.id} value={aluno.id.toString()}>
-                            {aluno.nome} - {aluno.email}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Curso</Label>
-                  <Select
-                    value={formData.cursoId}
-                    onValueChange={(value) => setFormData({ ...formData, cursoId: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um curso" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cursos.length === 0 ? (
-                        <SelectItem value="no-cursos" disabled>
-                          Nenhum curso cadastrado
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Curso</Label>
+                <Select
+                  value={formData.cursoId}
+                  onValueChange={(value) => setFormData({ ...formData, cursoId: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um curso" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cursos.length === 0 ? (
+                      <SelectItem value="no-cursos" disabled>
+                        Nenhum curso cadastrado
+                      </SelectItem>
+                    ) : (
+                      cursos.map((curso) => (
+                        <SelectItem key={curso.id} value={curso.id.toString()}>
+                          {curso.nome}
                         </SelectItem>
-                      ) : (
-                        cursos.map((curso) => (
-                          <SelectItem key={curso.id} value={curso.id.toString()}>
-                            {curso.nome}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                </div>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex gap-2">
-                <Button type="submit">Realizar Matrícula</Button>
-                <Button type="button" variant="outline" onClick={resetForm}>
-                  Cancelar
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      )}
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit">Realizar Matrícula</Button>
+              <Button type="button" variant="outline" onClick={resetForm}>
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Card>
         <CardHeader>
