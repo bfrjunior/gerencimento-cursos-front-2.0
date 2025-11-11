@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Users, Mail, Calendar } from 'lucide-react';
+import { Plus, Edit, Trash2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -214,20 +214,9 @@ export function AlunosPage() {
               <TableBody>
                 {alunos.map((aluno) => (
                   <TableRow key={aluno.id}>
-                    <TableCell className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Users className="h-4 w-4 text-blue-600" />
-                      </div>
-                      {aluno.nome}
-                    </TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                      {aluno.email}
-                    </TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      {formatDate(aluno.dataNascimento)}
-                    </TableCell>
+                    <TableCell>{aluno.nome}</TableCell>
+                    <TableCell>{aluno.email}</TableCell>
+                    <TableCell>{formatDate(aluno.dataNascimento)}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">Ativo</Badge>
                     </TableCell>
