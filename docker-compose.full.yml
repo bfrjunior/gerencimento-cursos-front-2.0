@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ../Gerenciamento-de-Cursos/Gerenciamento-cursos
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,13 +1,31 @@
 import axios from 'axios';
 
-// Detecta se está rodando localmente
-const isLocalhost = window.location.hostname === 'localhost' || 
-                   window.location.hostname === '127.0.0.1' ||
-                   window.location.hostname === '[::1]';
+// Detecta o ambiente baseado no hostname e porta
+const hostname = window.location.hostname;
+const port = window.location.port;
 
-const BASE_URL = isLocalhost 
-  ? 'https://localhost:7238/api'
-  : 'https://gerenciamento-de-cursos.onrender.com/api';
+// Configuração de URLs da API
+const getApiUrl = () => {
+  // Container frontend (porta 3000) acessando API no host
+  if (hostname === 'localhost' && port === '3000') {
+    return 'http://localhost:8080/api';
+  }
+  
+  // Desenvolvimento local
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') {
+    // Se a página está na porta 8080, usa a mesma porta para API
+    if (port === '8080') {
+      return 'http://localhost:8080/api';
+    }
+    // Caso contrário, usa a porta padrão do desenvolvimento
+    return 'https://localhost:7238/api';
+  }
+  
+  // Produção
+  return 'https://gerenciamento-de-cursos.onrender.com/api';
+};
+
+const BASE_URL = getApiUrl();
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -16,10 +34,12 @@ export const api = axios.create({
   },
 });
 
+// Interfaces baseadas nos Models do backend
 export interface Curso {
   id: number;
   nome: string;
   descricao: string;
+  matriculas?: Matricula[];
 }
 
 export interface Aluno {
@@ -27,13 +47,37 @@ export interface Aluno {
   nome: string;
   email: string;
   dataNascimento: string;
+  idade?: number;
+  matriculas?: Matricula[];
 }
 
 export interface Matricula {
-  id: number;
   alunoId: number;
   cursoId: number;
   dataMatricula: string;
   aluno?: Aluno;
   curso?: Curso;
+}
+
+// DTOs para envio de dados
+export interface AlunoDto {
+  nome: string;
+  email: string;
+  dataNascimento: string;
+}
+
+export interface CursoDto {
+  nome: string;
+  descricao: string;
+}
+
+export interface MatricularDto {
+  alunoId: number;
+  cursoId: number;
+}
+
+// Response types
+export interface ValidationResult {
+  success: boolean;
+  errorMessage?: string;
 }

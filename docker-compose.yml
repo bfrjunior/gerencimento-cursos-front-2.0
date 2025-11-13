@@ -7,4 +7,12 @@ services:
       - "3000:80"
     environment:
       - NODE_ENV=production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
