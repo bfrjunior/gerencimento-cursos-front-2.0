@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { api, Matricula, Aluno, Curso } from '@/services/api';
+import { api, Matricula, Aluno, Curso, MatricularDto } from '@/services/api';
 
 export function MatriculasPage() {
   const [, setMatriculas] = useState<Matricula[]>([]);
@@ -62,10 +62,12 @@ export function MatriculasPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('/matriculas', {
+      const matricularDto: MatricularDto = {
         alunoId: parseInt(formData.alunoId),
         cursoId: parseInt(formData.cursoId)
-      });
+      };
+
+      await api.post('/matriculas', matricularDto);
       toast({
         title: "Matrícula realizada!",
         description: "A matrícula foi criada com sucesso.",
@@ -75,9 +77,9 @@ export function MatriculasPage() {
       let errorMessage = "Não foi possível criar a matrícula.";
       
       if (error.response?.status === 409) {
-        errorMessage = "Este aluno já está matriculado neste curso.";
-      } else if (error.response?.status === 405) {
-        errorMessage = "Endpoint de matrículas não disponível no momento.";
+        errorMessage = error.response?.data || "Este aluno já está matriculado neste curso.";
+      } else if (error.response?.data && typeof error.response.data === 'string') {
+        errorMessage = error.response.data;
       }
       
       toast({
@@ -93,6 +95,13 @@ export function MatriculasPage() {
     setShowForm(false);
   };
 
+  const handleDialogChange = (open: boolean) => {
+    setShowForm(open);
+    if (!open) {
+      resetForm();
+    }
+  };
+
   const handleBuscarRelatorio = async (cursoId: string) => {
     if (!cursoId) {
       setAlunosMatriculados([]);
@@ -102,16 +111,21 @@ export function MatriculasPage() {
     try {
       setLoadingRelatorio(true);
       const response = await api.get(`/relatorios/alunos-por-curso/${cursoId}`);
-      setAlunosMatriculados(response.data);
+      setAlunosMatriculados(response.data || []);
     } catch (error: any) {
       if (error.response?.status === 404) {
         setAlunosMatriculados([]);
+        toast({
+          title: "Nenhum aluno encontrado",
+          description: "Este curso ainda não possui alunos matriculados.",
+        });
       } else {
         toast({
           title: "Erro ao buscar relatório",
           description: "Não foi possível carregar os alunos matriculados.",
           variant: "destructive",
         });
+        setAlunosMatriculados([]);
       }
     } finally {
       setLoadingRelatorio(false);
@@ -177,7 +191,7 @@ export function MatriculasPage() {
         ))}
       </div>
 
-      <Dialog open={showForm} onOpenChange={setShowForm}>
+      <Dialog open={showForm} onOpenChange={handleDialogChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Nova Matrícula</DialogTitle>

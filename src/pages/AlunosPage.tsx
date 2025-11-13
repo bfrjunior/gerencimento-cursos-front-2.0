@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { api, Aluno } from '@/services/api';
+import { api, Aluno, AlunoDto } from '@/services/api';
 
 export function AlunosPage() {
   const [alunos, setAlunos] = useState<Aluno[]>([]);
@@ -43,26 +43,31 @@ export function AlunosPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const alunoDto: AlunoDto = {
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        dataNascimento: formData.dataNascimento
+      };
+
       if (editingAluno) {
-        await api.put(`/alunos/${editingAluno.id}`, formData);
+        await api.put(`/alunos/${editingAluno.id}`, alunoDto);
         toast({
           title: "Aluno atualizado!",
           description: "As informações do aluno foram atualizadas com sucesso.",
         });
       } else {
-        await api.post('/alunos', formData);
+        await api.post('/alunos', alunoDto);
         toast({
           title: "Aluno cadastrado!",
           description: "O novo aluno foi adicionado ao sistema.",
         });
       }
-      fetchAlunos();
+      await fetchAlunos();
       resetForm();
     } catch (error: any) {
       let errorMessage = "Não foi possível salvar o aluno. Verifique os dados e tente novamente.";
       
-      if (error.response?.data) {
-        // Se o backend retornar uma mensagem específica, usar ela
+      if (error.response?.data && typeof error.response.data === 'string') {
         errorMessage = error.response.data;
       } else if (error.response?.status === 400) {
         errorMessage = "Dados inválidos. Verifique se o aluno é maior de idade.";
@@ -117,6 +122,13 @@ export function AlunosPage() {
     setShowForm(false);
   };
 
+  const handleDialogChange = (open: boolean) => {
+    setShowForm(open);
+    if (!open) {
+      resetForm();
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
@@ -134,7 +146,7 @@ export function AlunosPage() {
         </Button>
       </div>
 
-      <Dialog open={showForm} onOpenChange={setShowForm}>
+      <Dialog open={showForm} onOpenChange={handleDialogChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{editingAluno ? 'Editar Aluno' : 'Novo Aluno'}</DialogTitle>

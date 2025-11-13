@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { api, Curso } from '@/services/api';
+import { api, Curso, CursoDto } from '@/services/api';
 
 export function CursosPage() {
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -42,26 +42,69 @@ export function CursosPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validação básica
+    if (!formData.nome.trim() || !formData.descricao.trim()) {
+      toast({
+        title: "Dados inválidos",
+        description: "Nome e descrição são obrigatórios.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.nome.trim().length < 3 || formData.nome.trim().length > 100) {
+      toast({
+        title: "Nome inválido",
+        description: "O nome deve ter entre 3 e 100 caracteres.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.descricao.trim().length < 10 || formData.descricao.trim().length > 500) {
+      toast({
+        title: "Descrição inválida",
+        description: "A descrição deve ter entre 10 e 500 caracteres.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
+      const cursoDto: CursoDto = {
+        nome: formData.nome.trim(),
+        descricao: formData.descricao.trim()
+      };
+
       if (editingCurso) {
-        await api.put(`/cursos/${editingCurso.id}`, formData);
+        await api.put(`/cursos/${editingCurso.id}`, cursoDto);
         toast({
           title: "Curso atualizado!",
           description: "As informações do curso foram atualizadas com sucesso.",
         });
       } else {
-        await api.post('/cursos', formData);
+        await api.post('/cursos', cursoDto);
         toast({
           title: "Curso criado!",
           description: "O novo curso foi adicionado ao sistema.",
         });
       }
-      fetchCursos();
+      await fetchCursos();
       resetForm();
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Erro ao salvar curso:', error);
+      let errorMessage = "Não foi possível salvar o curso. Verifique os dados e tente novamente.";
+      
+      if (error.response?.data && typeof error.response.data === 'string') {
+        errorMessage = error.response.data;
+      } else if (error.response?.status === 400) {
+        errorMessage = "Dados inválidos. Verifique se o nome e descrição atendem aos requisitos.";
+      }
+      
       toast({
         title: "Erro ao salvar curso",
-        description: "Não foi possível salvar o curso. Verifique os dados e tente novamente.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -104,6 +147,13 @@ export function CursosPage() {
     setShowForm(false);
   };
 
+  const handleDialogChange = (open: boolean) => {
+    setShowForm(open);
+    if (!open) {
+      resetForm();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -117,7 +167,7 @@ export function CursosPage() {
         </Button>
       </div>
 
-      <Dialog open={showForm} onOpenChange={setShowForm}>
+      <Dialog open={showForm} onOpenChange={handleDialogChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{editingCurso ? 'Editar Curso' : 'Novo Curso'}</DialogTitle>
@@ -131,8 +181,11 @@ export function CursosPage() {
                 <Label htmlFor="nome">Nome do Curso</Label>
                 <Input
                   id="nome"
+                  placeholder="Ex: React Avançado"
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                  minLength={3}
+                  maxLength={100}
                   required
                 />
               </div>
@@ -140,8 +193,11 @@ export function CursosPage() {
                 <Label htmlFor="descricao">Descrição</Label>
                 <Input
                   id="descricao"
+                  placeholder="Descreva o conteúdo do curso (mínimo 10 caracteres)"
                   value={formData.descricao}
                   onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                  minLength={10}
+                  maxLength={500}
                   required
                 />
               </div>
