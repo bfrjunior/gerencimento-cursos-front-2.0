@@ -116,8 +116,8 @@ describe('MatriculasPage', () => {
     render(<MatriculasPage />)
     
     await waitFor(() => {
-      expect(screen.getByText('Relatório de Alunos por Curso')).toBeInTheDocument()
-      expect(screen.getByText('Selecione um curso para ver os alunos matriculados')).toBeInTheDocument()
+      expect(screen.getByText('Relatórios de Matrículas')).toBeInTheDocument()
+      expect(screen.getByText('Visualize matrículas por curso ou por aluno')).toBeInTheDocument()
     })
   })
 })
