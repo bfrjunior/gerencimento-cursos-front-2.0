@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, FileText, Users, BookOpen } from 'lucide-react';
+import { Plus, FileText, Users, BookOpen, Trash2, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -7,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { api, Matricula, Aluno, Curso, MatricularDto } from '@/services/api';
 
@@ -18,8 +20,11 @@ export function MatriculasPage() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ alunoId: '', cursoId: '' });
   const [selectedCursoRelatorio, setSelectedCursoRelatorio] = useState('');
+  const [selectedAlunoRelatorio, setSelectedAlunoRelatorio] = useState('');
   const [alunosMatriculados, setAlunosMatriculados] = useState<Aluno[]>([]);
+  const [cursosMatriculados, setCursosMatriculados] = useState<Curso[]>([]);
   const [loadingRelatorio, setLoadingRelatorio] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; alunoId: number; cursoId: number; alunoNome: string; cursoNome: string } | null>(null);
   const { toast } = useToast();
 
   const fetchData = async () => {
@@ -135,6 +140,89 @@ export function MatriculasPage() {
       }
     } finally {
       setLoadingRelatorio(false);
+    }
+  };
+
+  const handleBuscarCursosPorAluno = async (alunoId: string) => {
+    if (!alunoId) {
+      setCursosMatriculados([]);
+      return;
+    }
+
+    try {
+      setLoadingRelatorio(true);
+      
+      // Buscar em todos os cursos quais têm este aluno matriculado
+      const cursosComAluno: Curso[] = [];
+      
+      for (const curso of cursos) {
+        try {
+          const response = await api.get(`/relatorios/alunos-por-curso/${curso.id}`);
+          const alunosData = response.data?.data || response.data;
+          const alunosMatriculadosNoCurso = Array.isArray(alunosData) ? alunosData : [];
+          
+          // Verificar se o aluno está matriculado neste curso
+          const alunoEncontrado = alunosMatriculadosNoCurso.find(aluno => aluno.id.toString() === alunoId);
+          if (alunoEncontrado) {
+            cursosComAluno.push(curso);
+          }
+        } catch (error) {
+          // Ignorar erros de cursos sem alunos
+          continue;
+        }
+      }
+      
+      setCursosMatriculados(cursosComAluno);
+    } catch (error: any) {
+      toast({
+        title: "Erro ao buscar relatório",
+        description: "Não foi possível carregar os cursos do aluno.",
+        variant: "destructive",
+      });
+      setCursosMatriculados([]);
+    } finally {
+      setLoadingRelatorio(false);
+    }
+  };
+
+  const handleRemoverMatricula = (alunoId: number, cursoId: number, alunoNome: string, cursoNome: string) => {
+    setDeleteDialog({ open: true, alunoId, cursoId, alunoNome, cursoNome });
+  };
+
+  const handleConfirmRemover = async () => {
+    if (!deleteDialog) return;
+
+    try {
+      await api.delete(`/matriculas?alunoId=${deleteDialog.alunoId}&cursoId=${deleteDialog.cursoId}`);
+      
+      toast({
+        title: "Matrícula removida!",
+        description: "A matrícula foi removida com sucesso.",
+      });
+      
+      // Atualizar relatórios se estiverem sendo exibidos
+      if (selectedCursoRelatorio) {
+        handleBuscarRelatorio(selectedCursoRelatorio);
+      }
+      if (selectedAlunoRelatorio) {
+        handleBuscarCursosPorAluno(selectedAlunoRelatorio);
+      }
+    } catch (error: any) {
+      let errorMessage = "Não foi possível remover a matrícula. Tente novamente.";
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.status === 404) {
+        errorMessage = "Matrícula não encontrada.";
+      }
+      
+      toast({
+        title: "Erro ao remover matrícula",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setDeleteDialog(null);
     }
   };
 
@@ -269,81 +357,202 @@ export function MatriculasPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Relatório de Alunos por Curso
+            <Filter className="h-5 w-5" />
+            Relatórios de Matrículas
           </CardTitle>
           <CardDescription>
-            Selecione um curso para ver os alunos matriculados
+            Visualize matrículas por curso ou por aluno
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label>Selecionar Curso para Relatório</Label>
-            <Select
-              value={selectedCursoRelatorio}
-              onValueChange={(value) => {
-                setSelectedCursoRelatorio(value);
-                handleBuscarRelatorio(value);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione um curso para ver os alunos" />
-              </SelectTrigger>
-              <SelectContent>
-                {cursos.map((curso) => (
-                  <SelectItem key={curso.id} value={curso.id.toString()}>
-                    {curso.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {selectedCursoRelatorio && (
-            <div>
-              <h4 className="font-medium mb-3">
-                Alunos matriculados em: {cursos.find(c => c.id.toString() === selectedCursoRelatorio)?.nome}
-              </h4>
-              
-              {loadingRelatorio ? (
-                <div className="text-center py-4">Carregando alunos...</div>
-              ) : alunosMatriculados.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nome</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Data de Nascimento</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {alunosMatriculados.map((aluno) => (
-                      <TableRow key={aluno.id}>
-                        <TableCell className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Users className="h-4 w-4 text-blue-600" />
-                          </div>
-                          {aluno.nome}
-                        </TableCell>
-                        <TableCell>{aluno.email}</TableCell>
-                        <TableCell>{formatDate(aluno.dataNascimento)}</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Matriculado</Badge>
-                        </TableCell>
-                      </TableRow>
+        <CardContent>
+          <Tabs defaultValue="por-curso" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="por-curso">Por Curso</TabsTrigger>
+              <TabsTrigger value="por-aluno">Por Aluno</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="por-curso" className="space-y-4">
+              <div>
+                <Label>Selecionar Curso</Label>
+                <Select
+                  value={selectedCursoRelatorio}
+                  onValueChange={(value) => {
+                    setSelectedCursoRelatorio(value);
+                    setSelectedAlunoRelatorio('');
+                    setCursosMatriculados([]);
+                    handleBuscarRelatorio(value);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um curso para ver os alunos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cursos.map((curso) => (
+                      <SelectItem key={curso.id} value={curso.id.toString()}>
+                        {curso.nome}
+                      </SelectItem>
                     ))}
-                  </TableBody>
-                </Table>
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  📝 Nenhum aluno matriculado neste curso ainda.
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {selectedCursoRelatorio && (
+                <div>
+                  <h4 className="font-medium mb-3">
+                    Alunos matriculados em: {cursos.find(c => c.id.toString() === selectedCursoRelatorio)?.nome}
+                  </h4>
+                  
+                  {loadingRelatorio ? (
+                    <div className="text-center py-4">Carregando alunos...</div>
+                  ) : alunosMatriculados.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Nome</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Data de Nascimento</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Ações</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {alunosMatriculados.map((aluno) => (
+                          <TableRow key={aluno.id}>
+                            <TableCell className="flex items-center gap-2">
+                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <Users className="h-4 w-4 text-blue-600" />
+                              </div>
+                              {aluno.nome}
+                            </TableCell>
+                            <TableCell>{aluno.email}</TableCell>
+                            <TableCell>{formatDate(aluno.dataNascimento)}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">Matriculado</Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleRemoverMatricula(
+                                  aluno.id, 
+                                  parseInt(selectedCursoRelatorio),
+                                  aluno.nome,
+                                  cursos.find(c => c.id.toString() === selectedCursoRelatorio)?.nome || ''
+                                )}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      📝 Nenhum aluno matriculado neste curso ainda.
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
+            </TabsContent>
+
+            <TabsContent value="por-aluno" className="space-y-4">
+              <div>
+                <Label>Selecionar Aluno</Label>
+                <Select
+                  value={selectedAlunoRelatorio}
+                  onValueChange={(value) => {
+                    setSelectedAlunoRelatorio(value);
+                    setSelectedCursoRelatorio('');
+                    setAlunosMatriculados([]);
+                    handleBuscarCursosPorAluno(value);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um aluno para ver os cursos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {alunos.map((aluno) => (
+                      <SelectItem key={aluno.id} value={aluno.id.toString()}>
+                        {aluno.nome} - {aluno.email}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {selectedAlunoRelatorio && (
+                <div>
+                  <h4 className="font-medium mb-3">
+                    Cursos de: {alunos.find(a => a.id.toString() === selectedAlunoRelatorio)?.nome}
+                  </h4>
+                  
+                  {loadingRelatorio ? (
+                    <div className="text-center py-4">Carregando cursos...</div>
+                  ) : cursosMatriculados.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Nome do Curso</TableHead>
+                          <TableHead>Descrição</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Ações</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {cursosMatriculados.map((curso) => (
+                          <TableRow key={curso.id}>
+                            <TableCell className="flex items-center gap-2">
+                              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                <BookOpen className="h-4 w-4 text-purple-600" />
+                              </div>
+                              {curso.nome}
+                            </TableCell>
+                            <TableCell className="max-w-xs truncate">{curso.descricao}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">Matriculado</Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleRemoverMatricula(
+                                  parseInt(selectedAlunoRelatorio),
+                                  curso.id,
+                                  alunos.find(a => a.id.toString() === selectedAlunoRelatorio)?.nome || '',
+                                  curso.nome
+                                )}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      📚 Este aluno ainda não está matriculado em nenhum curso.
+                    </div>
+                  )}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={deleteDialog?.open || false}
+        onOpenChange={(open) => !open && setDeleteDialog(null)}
+        onConfirm={handleConfirmRemover}
+        title="Remover Matrícula"
+        description={`Tem certeza que deseja remover a matrícula de ${deleteDialog?.alunoNome} do curso ${deleteDialog?.cursoNome}?`}
+        confirmText="Remover"
+        cancelText="Cancelar"
+      />
     </div>
   );
 }
