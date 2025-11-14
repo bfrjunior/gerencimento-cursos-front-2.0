@@ -32,13 +32,18 @@ export function MatriculasPage() {
         api.get('/cursos')
       ]);
       
-      setAlunos(alunosRes.data);
-      setCursos(cursosRes.data);
+      // Backend retorna ApiResult, dados estão em .data.data ou .data
+      const alunosData = alunosRes.data?.data || alunosRes.data;
+      const cursosData = cursosRes.data?.data || cursosRes.data;
+      
+      setAlunos(Array.isArray(alunosData) ? alunosData : []);
+      setCursos(Array.isArray(cursosData) ? cursosData : []);
       
       // Tentar carregar matrículas separadamente
       try {
         const matriculasRes = await api.get('/matriculas');
-        setMatriculas(matriculasRes.data);
+        const matriculasData = matriculasRes.data?.data || matriculasRes.data;
+        setMatriculas(Array.isArray(matriculasData) ? matriculasData : []);
       } catch (matriculasError) {
         setMatriculas([]);
       }
@@ -111,7 +116,8 @@ export function MatriculasPage() {
     try {
       setLoadingRelatorio(true);
       const response = await api.get(`/relatorios/alunos-por-curso/${cursoId}`);
-      setAlunosMatriculados(response.data || []);
+      const alunosData = response.data?.data || response.data;
+      setAlunosMatriculados(Array.isArray(alunosData) ? alunosData : []);
     } catch (error: any) {
       if (error.response?.status === 404) {
         setAlunosMatriculados([]);

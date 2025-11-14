@@ -24,7 +24,9 @@ export function CursosPage() {
     try {
       setLoading(true);
       const response = await api.get('/cursos');
-      setCursos(response.data);
+      // Backend retorna ApiResult, dados estão em .data.data ou .data
+      const cursosData = response.data?.data || response.data;
+      setCursos(Array.isArray(cursosData) ? cursosData : []);
     } catch (error) {
       toast({
         title: "Erro ao carregar cursos",

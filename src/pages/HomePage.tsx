@@ -20,10 +20,13 @@ export function HomePage() {
         api.get('/alunos')
       ]);
       
-      const cursos: Curso[] = cursosRes.data;
-      const alunos: Aluno[] = alunosRes.data;
+      // Backend agora retorna ApiResult<T>, então os dados estão em .data.data
+      const cursosData = cursosRes.data?.data || cursosRes.data;
+      const alunosData = alunosRes.data?.data || alunosRes.data;
       
-
+      const cursos: Curso[] = Array.isArray(cursosData) ? cursosData : [];
+      const alunos: Aluno[] = Array.isArray(alunosData) ? alunosData : [];
+      
       const totalMatriculas = alunos.reduce((total, aluno) => {
         return total + (aluno.matriculas?.length || 0);
       }, 0);

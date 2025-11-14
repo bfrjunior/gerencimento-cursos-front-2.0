@@ -24,7 +24,9 @@ export function AlunosPage() {
     try {
       setLoading(true);
       const response = await api.get('/alunos');
-      setAlunos(response.data);
+      // Backend retorna ApiResult, dados estão em .data.data ou .data
+      const alunosData = response.data?.data || response.data;
+      setAlunos(Array.isArray(alunosData) ? alunosData : []);
     } catch (error) {
       toast({
         title: "Erro ao carregar alunos",
