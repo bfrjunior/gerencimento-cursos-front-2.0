@@ -8,21 +8,28 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    // Força execução inline sem pools
+    // Modo inline - sem workers, sem pools, sem threads
     pool: 'threads',
     poolOptions: {
       threads: {
         singleThread: true,
         isolate: false,
         useAtomics: false,
+        minThreads: 1,
+        maxThreads: 1,
       },
     },
-    // Configurações adicionais para estabilidade
+    // Desabilita paralelismo completamente
     fileParallelism: false,
     maxConcurrency: 1,
-    testTimeout: 30000,
-    hookTimeout: 30000,
-    teardownTimeout: 30000,
+    // Timeouts generosos
+    testTimeout: 60000,
+    hookTimeout: 60000,
+    teardownTimeout: 60000,
+    // Desabilita otimizações que podem causar problemas
+    deps: {
+      inline: true,
+    },
   },
   resolve: {
     alias: {

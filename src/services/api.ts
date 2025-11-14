@@ -1,27 +1,26 @@
 import axios from 'axios';
 
-// Detecta o ambiente baseado no hostname e porta
+
 const hostname = window.location.hostname;
 const port = window.location.port;
 
-// Configuração de URLs da API
 const getApiUrl = () => {
-  // Container frontend (porta 3000) acessando API no host
+
   if (hostname === 'localhost' && port === '3000') {
     return 'http://localhost:8080/api';
   }
   
-  // Desenvolvimento local
+
   if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') {
-    // Se a página está na porta 8080, usa a mesma porta para API
+
     if (port === '8080') {
       return 'http://localhost:8080/api';
     }
-    // Caso contrário, usa a porta padrão do desenvolvimento
+
     return 'https://localhost:7238/api';
   }
   
-  // Produção
+
   return 'https://gerenciamento-de-cursos.onrender.com/api';
 };
 
@@ -34,7 +33,7 @@ export const api = axios.create({
   },
 });
 
-// Interfaces baseadas nos Models do backend
+
 export interface Curso {
   id: number;
   nome: string;
@@ -59,7 +58,7 @@ export interface Matricula {
   curso?: Curso;
 }
 
-// DTOs para envio de dados
+
 export interface AlunoDto {
   nome: string;
   email: string;
@@ -76,7 +75,7 @@ export interface MatricularDto {
   cursoId: number;
 }
 
-// Response types
+
 export interface ValidationResult {
   success: boolean;
   errorMessage?: string;

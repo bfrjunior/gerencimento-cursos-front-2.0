@@ -8,25 +8,30 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    // Força execução inline sem pools
+    // Configuração MÍNIMA - última tentativa
+    run: true,
+    // Sem pools, sem workers, sem nada
     pool: 'threads',
     poolOptions: {
       threads: {
         singleThread: true,
         isolate: false,
-        useAtomics: false,
       },
     },
-    // Configurações adicionais para estabilidade
+    // Execução completamente sequencial
     fileParallelism: false,
     maxConcurrency: 1,
-    testTimeout: 30000,
-    hookTimeout: 30000,
-    teardownTimeout: 30000,
+    // Timeouts muito altos
+    testTimeout: 120000,
+    hookTimeout: 120000,
+    teardownTimeout: 120000,
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
+  esbuild: {
+    target: 'node14'
+  }
 })

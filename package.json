@@ -11,6 +11,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
+    "test:simple": "vitest run --config vitest.config.simple.ts",
+    "test:force": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs run --config vitest.config.simple.ts",
+    "test:minimal": "vitest run --config vitest.config.minimal.ts --no-coverage --reporter=verbose",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
