@@ -94,11 +94,7 @@ pnpm dev
 ```bash
 pnpm dev          # Servidor de desenvolvimento (porta 5173)
 pnpm build        # Build para produção
-pnpm preview      # Preview da build de produção
-pnpm lint         # Verificar código com ESLint
-pnpm test         # Executar testes em modo watch
 pnpm test:run     # Executar testes uma vez
-pnpm test:ui      # Interface visual dos testes
 pnpm test:coverage # Relatório de cobertura
 ```
 
