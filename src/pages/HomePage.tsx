@@ -1,12 +1,81 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GraduationCap, Users, FileText, TrendingUp } from 'lucide-react';
+import { api } from '@/services/api';
+import type { Aluno, Curso } from '@/interfaces';
 
 export function HomePage() {
-  const stats = [
-    { title: 'Cursos Ativos', value: '12', icon: GraduationCap, color: 'text-blue-600' },
-    { title: 'Alunos Cadastrados', value: '248', icon: Users, color: 'text-green-600' },
-    { title: 'Matrículas Ativas', value: '156', icon: FileText, color: 'text-purple-600' },
-    { title: 'Taxa de Crescimento', value: '+15%', icon: TrendingUp, color: 'text-orange-600' },
+  const [stats, setStats] = useState({
+    cursos: 0,
+    alunos: 0,
+    matriculas: 0,
+    apiStatus: 'checking' as 'online' | 'offline' | 'checking',
+    loading: true
+  });
+
+  const fetchStats = async () => {
+    try {
+      const [cursosRes, alunosRes] = await Promise.all([
+        api.get('/cursos'),
+        api.get('/alunos')
+      ]);
+      
+      const cursos: Curso[] = cursosRes.data;
+      const alunos: Aluno[] = alunosRes.data;
+      
+
+      const totalMatriculas = alunos.reduce((total, aluno) => {
+        return total + (aluno.matriculas?.length || 0);
+      }, 0);
+      
+      setStats({
+        cursos: cursos.length,
+        alunos: alunos.length,
+        matriculas: totalMatriculas,
+        apiStatus: 'online',
+        loading: false
+      });
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
+      setStats(prev => ({ 
+        ...prev, 
+        apiStatus: 'offline',
+        loading: false 
+      }));
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const dashboardStats = [
+    { 
+      title: 'Cursos Disponíveis', 
+      value: stats.loading ? '...' : stats.cursos.toString(), 
+      icon: GraduationCap, 
+      color: 'text-blue-600' 
+    },
+    { 
+      title: 'Alunos Cadastrados', 
+      value: stats.loading ? '...' : stats.alunos.toString(), 
+      icon: Users, 
+      color: 'text-green-600' 
+    },
+    { 
+      title: 'Total de Matrículas', 
+      value: stats.loading ? '...' : stats.matriculas.toString(), 
+      icon: FileText, 
+      color: 'text-purple-600' 
+    },
+    { 
+      title: 'Status da API', 
+      value: stats.apiStatus === 'checking' ? 'Verificando...' : 
+             stats.apiStatus === 'online' ? '✓ Online' : '✗ Offline - Verifique a API', 
+      icon: TrendingUp, 
+      color: stats.apiStatus === 'online' ? 'text-green-600' : 
+             stats.apiStatus === 'offline' ? 'text-red-600' : 'text-yellow-600'
+    },
   ];
 
   return (
@@ -21,7 +90,7 @@ export function HomePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
+        {dashboardStats.map((stat, index) => (
           <Card key={index} className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">

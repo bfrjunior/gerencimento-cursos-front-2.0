@@ -1,26 +1,27 @@
 import axios from 'axios';
 
-
+// Detecta o ambiente baseado no hostname e porta
 const hostname = window.location.hostname;
 const port = window.location.port;
 
-const getApiUrl = () => {
-
+// Configuração de URLs da API
+const getApiUrl = (): string => {
+  // Container frontend (porta 3000) acessando API no host
   if (hostname === 'localhost' && port === '3000') {
     return 'http://localhost:8080/api';
   }
   
-
+  // Desenvolvimento local
   if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') {
-
+    // Se a página está na porta 8080, usa a mesma porta para API
     if (port === '8080') {
       return 'http://localhost:8080/api';
     }
-
+    // Caso contrário, usa a porta padrão do desenvolvimento
     return 'https://localhost:7238/api';
   }
   
-
+  // Produção
   return 'https://gerenciamento-de-cursos.onrender.com/api';
 };
 
@@ -33,50 +34,28 @@ export const api = axios.create({
   },
 });
 
-
-export interface Curso {
-  id: number;
-  nome: string;
-  descricao: string;
-  matriculas?: Matricula[];
-}
-
-export interface Aluno {
-  id: number;
-  nome: string;
-  email: string;
-  dataNascimento: string;
-  idade?: number;
-  matriculas?: Matricula[];
-}
-
-export interface Matricula {
-  alunoId: number;
-  cursoId: number;
-  dataMatricula: string;
-  aluno?: Aluno;
-  curso?: Curso;
-}
-
-
-export interface AlunoDto {
-  nome: string;
-  email: string;
-  dataNascimento: string;
-}
-
-export interface CursoDto {
-  nome: string;
-  descricao: string;
-}
-
-export interface MatricularDto {
-  alunoId: number;
-  cursoId: number;
-}
-
-
-export interface ValidationResult {
-  success: boolean;
-  errorMessage?: string;
-}
+export type {
+  // Interfaces principais
+  Aluno,
+  Curso,
+  Matricula,
+  // DTOs
+  AlunoDto,
+  CursoDto,
+  MatricularDto,
+  // Utilitárias
+  ValidationResult,
+  ApiResponse,
+  FormData,
+  DialogState,
+  ToastConfig,
+  LoadingState,
+  PaginationState,
+  // Types
+  EntityId,
+  DateString,
+  EmailString,
+  // Enums
+  StatusMatricula,
+  TipoUsuario
+} from '@/interfaces';

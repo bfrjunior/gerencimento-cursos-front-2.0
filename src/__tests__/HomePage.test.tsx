@@ -12,10 +12,10 @@ describe('HomePage', () => {
   it('deve mostrar os cards de estatísticas', () => {
     render(<HomePage />)
     
-    expect(screen.getByText('Cursos Ativos')).toBeInTheDocument()
+    expect(screen.getByText('Cursos Disponíveis')).toBeInTheDocument()
     expect(screen.getByText('Alunos Cadastrados')).toBeInTheDocument()
-    expect(screen.getByText('Matrículas Ativas')).toBeInTheDocument()
-    expect(screen.getByText('Taxa de Crescimento')).toBeInTheDocument()
+    expect(screen.getByText('Total de Matrículas')).toBeInTheDocument()
+    expect(screen.getByText('Status da API')).toBeInTheDocument()
   })
 
   it('deve mostrar os recursos principais', () => {
