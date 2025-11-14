@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.74% </span>
+                <span class="strong">65.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>42/62</span>
+                <span class='fraction'>44/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.75% </span>
+                <span class="strong">45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/16</span>
+                <span class='fraction'>9/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.7% </span>
+                <span class="strong">61.11% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>11/17</span>
+                <span class='fraction'>11/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.85% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>42/61</span>
+                <span class='fraction'>44/66</span>
             </div>
         
             
@@ -334,7 +334,8 @@
 <a name='L269'></a><a href='#L269'>269</a>
 <a name='L270'></a><a href='#L270'>270</a>
 <a name='L271'></a><a href='#L271'>271</a>
-<a name='L272'></a><a href='#L272'>272</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -380,6 +381,12 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -398,7 +405,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -451,6 +457,13 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">68x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">68x</span>
@@ -561,17 +574,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -606,7 +608,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Users, Mail, Calendar } from 'lucide-react';
+import { Plus, Edit, Trash2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -616,7 +618,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { api, Aluno } from '@/services/api';
+import { api, Aluno, AlunoDto } from '@/services/api';
 &nbsp;
 export function AlunosPage() {
   const [alunos, setAlunos] = useState&lt;Aluno[]&gt;([]);
@@ -650,26 +652,31 @@ export function AlunosPage() {
   const handleSubmit = async (e: React.FormEvent) =&gt; {
     e.preventDefault();
     try {
+      const alunoDto: AlunoDto = {
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        dataNascimento: formData.dataNascimento
+      };
+&nbsp;
       <span class="missing-if-branch" title="if path not taken" >I</span>if (editingAluno) {
-<span class="cstat-no" title="statement not covered" >        await api.put(`/alunos/${editingAluno.id}`, formData);</span>
+<span class="cstat-no" title="statement not covered" >        await api.put(`/alunos/${editingAluno.id}`, alunoDto);</span>
 <span class="cstat-no" title="statement not covered" >        toast({</span>
           title: "Aluno atualizado!",
           description: "As informações do aluno foram atualizadas com sucesso.",
         });
       } else {
-        await api.post('/alunos', formData);
+        await api.post('/alunos', alunoDto);
         toast({
           title: "Aluno cadastrado!",
           description: "O novo aluno foi adicionado ao sistema.",
         });
       }
-      fetchAlunos();
+      await fetchAlunos();
       resetForm();
     } catch (error: any) {
       let errorMessage = "Não foi possível salvar o aluno. Verifique os dados e tente novamente.";
       
-      if (error.response?.data) {
-        // Se o backend retornar uma mensagem específica, usar ela
+      if (error.response?.data &amp;&amp; typeof error.response.data === 'string') {
         errorMessage = error.response.data;
 <span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="else path not taken" >E</span>} else if (error.response?.status === 400) {</span>
 <span class="cstat-no" title="statement not covered" >        errorMessage = "Dados inválidos. Verifique se o aluno é maior de idade.";</span>
@@ -724,6 +731,13 @@ export function AlunosPage() {
     setShowForm(false);
   };
 &nbsp;
+  const handleDialogChange = <span class="fstat-no" title="function not covered" >(o</span>pen: boolean) =&gt; {
+<span class="cstat-no" title="statement not covered" >    setShowForm(open);</span>
+<span class="cstat-no" title="statement not covered" >    if (!open) {</span>
+<span class="cstat-no" title="statement not covered" >      resetForm();</span>
+    }
+  };
+&nbsp;
   const formatDate = (dateString: string) =&gt; {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
@@ -741,7 +755,7 @@ export function AlunosPage() {
         &lt;/Button&gt;
       &lt;/div&gt;
 &nbsp;
-      &lt;Dialog open={showForm} onOpenChange={setShowForm}&gt;
+      &lt;Dialog open={showForm} onOpenChange={handleDialogChange}&gt;
         &lt;DialogContent&gt;
           &lt;DialogHeader&gt;
             &lt;DialogTitle&gt;{editingAluno ? <span class="branch-0 cbranch-no" title="branch not covered" >'Editar Aluno' : '</span>Novo Aluno'}&lt;/DialogTitle&gt;
@@ -821,20 +835,9 @@ export function AlunosPage() {
               &lt;TableBody&gt;
                 {alunos.map((aluno) =&gt; (
                   &lt;TableRow key={aluno.id}&gt;
-                    &lt;TableCell className="flex items-center gap-2"&gt;
-                      &lt;div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"&gt;
-                        &lt;Users className="h-4 w-4 text-blue-600" /&gt;
-                      &lt;/div&gt;
-                      {aluno.nome}
-                    &lt;/TableCell&gt;
-                    &lt;TableCell className="flex items-center gap-2"&gt;
-                      &lt;Mail className="h-4 w-4 text-gray-400" /&gt;
-                      {aluno.email}
-                    &lt;/TableCell&gt;
-                    &lt;TableCell className="flex items-center gap-2"&gt;
-                      &lt;Calendar className="h-4 w-4 text-gray-400" /&gt;
-                      {formatDate(aluno.dataNascimento)}
-                    &lt;/TableCell&gt;
+                    &lt;TableCell&gt;{aluno.nome}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{aluno.email}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{formatDate(aluno.dataNascimento)}&lt;/TableCell&gt;
                     &lt;TableCell&gt;
                       &lt;Badge variant="secondary"&gt;Ativo&lt;/Badge&gt;
                     &lt;/TableCell&gt;
@@ -883,7 +886,7 @@ export function AlunosPage() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-11T18:16:09.760Z
+                at 2025-11-14T12:59:12.873Z
             </div>
         <script src="../prettify.js"></script>
         <script>
