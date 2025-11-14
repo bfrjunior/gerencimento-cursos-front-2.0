@@ -31,20 +31,20 @@ export function MatriculasPage() {
     try {
       setLoading(true);
       
-      // Carregar alunos e cursos primeiro
+ 
       const [alunosRes, cursosRes] = await Promise.all([
         api.get('/alunos'),
         api.get('/cursos')
       ]);
       
-      // Backend retorna ApiResult, dados estão em .data.data ou .data
+    
       const alunosData = alunosRes.data?.data || alunosRes.data;
       const cursosData = cursosRes.data?.data || cursosRes.data;
       
       setAlunos(Array.isArray(alunosData) ? alunosData : []);
       setCursos(Array.isArray(cursosData) ? cursosData : []);
       
-      // Tentar carregar matrículas separadamente
+    
       try {
         const matriculasRes = await api.get('/matriculas');
         const matriculasData = matriculasRes.data?.data || matriculasRes.data;
@@ -193,7 +193,12 @@ export function MatriculasPage() {
     if (!deleteDialog) return;
 
     try {
-      await api.delete(`/matriculas?alunoId=${deleteDialog.alunoId}&cursoId=${deleteDialog.cursoId}`);
+      const desmatricularDto = {
+        alunoId: deleteDialog.alunoId,
+        cursoId: deleteDialog.cursoId
+      };
+      
+      await api.post('/matriculas/desmatricular', desmatricularDto);
       
       toast({
         title: "Matrícula removida!",
@@ -210,8 +215,8 @@ export function MatriculasPage() {
     } catch (error: any) {
       let errorMessage = "Não foi possível remover a matrícula. Tente novamente.";
       
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error.response?.data && typeof error.response.data === 'string') {
+        errorMessage = error.response.data;
       } else if (error.response?.status === 404) {
         errorMessage = "Matrícula não encontrada.";
       }
