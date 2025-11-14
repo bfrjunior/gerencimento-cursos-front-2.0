@@ -193,12 +193,7 @@ export function MatriculasPage() {
     if (!deleteDialog) return;
 
     try {
-      const desmatricularDto = {
-        alunoId: deleteDialog.alunoId,
-        cursoId: deleteDialog.cursoId
-      };
-      
-      await api.post('/matriculas/desmatricular', desmatricularDto);
+      await api.delete(`/matriculas?alunoId=${deleteDialog.alunoId}&cursoId=${deleteDialog.cursoId}`);
       
       toast({
         title: "Matrícula removida!",
@@ -215,8 +210,8 @@ export function MatriculasPage() {
     } catch (error: any) {
       let errorMessage = "Não foi possível remover a matrícula. Tente novamente.";
       
-      if (error.response?.data && typeof error.response.data === 'string') {
-        errorMessage = error.response.data;
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
       } else if (error.response?.status === 404) {
         errorMessage = "Matrícula não encontrada.";
       }
